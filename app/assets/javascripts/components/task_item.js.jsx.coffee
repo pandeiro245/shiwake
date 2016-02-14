@@ -130,4 +130,3 @@
        <td><i className="fa fa-fw fa-check"></i></td>   
       </tr>`
 
-

@@ -26,8 +26,15 @@ class TimeCrowd
     access_token.get("/api/v1/teams/#{id}").parsed
   end
 
-  def team_tasks(team_id, state = nil, page=1)
-    access_token.get("/api/v1/teams/#{team_id}/tasks?state=#{state}&page=#{page}").parsed
+  def team_tasks(team_id, state = nil, page=1, parent_id=nil)
+    url = "/api/v1/teams/#{team_id}/tasks?state=#{state}"
+    url += "&page=#{page}" if page
+    url += "&parent_id=#{parent_id}" if parent_id
+    access_token.get(url).parsed
+  end
+
+  def team_task(team_id, id)
+    access_token.get("/api/v1/teams/#{team_id}/tasks/#{id}").parsed
   end
 
   def update_team_task(team_id, id, task)
@@ -37,3 +44,4 @@ class TimeCrowd
     ).parsed
   end
 end
+

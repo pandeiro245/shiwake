@@ -1,0 +1,19 @@
+h1=@task['title']
+
+hr
+
+/= '現在の親タスク：'
+/= @parent_task['title']
+
+hr
+
+= '親タスク候補：'
+- @expected_parent_tasks.each do |task|
+  = task['title']
+  br
+
+- @children.each do |child|
+  hr
+  = link_to '◯', child['url'], {target: '_blank'}
+  = link_to child['title'], team_task_path(params[:team_id], child['id'])
+

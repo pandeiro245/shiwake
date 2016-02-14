@@ -13,7 +13,7 @@ Rails.application.routes.draw do
 
   resources :teams, only: [:edit] do
     resources :filters, only: [:index]
-    resources :tasks, only: [:index, :update]
+    resources :tasks, only: [:index, :show, :update]
   end
 
   # The priority is based upon order of creation: first created -> highest priority.

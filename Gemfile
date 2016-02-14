@@ -68,6 +68,7 @@ gem 'bootstrap-sass'
 gem 'font-awesome-sass'
 gem 'react-rails'
 gem 'activerecord-session_store'
+gem 'ruby-trello'
 
 source 'https://rails-assets.org' do
   gem 'rails-assets-select2'
