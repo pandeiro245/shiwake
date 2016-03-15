@@ -1,3 +1,7 @@
+javascript:
+  window.filters = #{Filter.all.to_json.html_safe}
+
+
 h2
   => @team['name']
   small

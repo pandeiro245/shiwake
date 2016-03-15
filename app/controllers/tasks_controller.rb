@@ -2,7 +2,22 @@ class TasksController < ApplicationController
   before_action :authenticate_user!
 
   def index
-    @tasks = client.team_tasks(params[:team_id]).sort { |a, b| a['path'] <=> b['path'] }
+    limit = 300
+
+    team_id = params[:team_id]
+    key = "tasks/#{team_id}"
+    Rails.cache.delete(key) if params[:refresh]
+    @tasks = Rails.cache.fetch(key) do
+      page = 1
+      data = client.team_tasks(team_id, 'all', page)
+      tasks = data
+      while data.present? && page < limit
+        page += 1
+        data = client.team_tasks(team_id, 'all', page)
+        tasks += data
+      end
+      tasks.sort { |a, b| a['path'] <=> b['path'] }
+    end
     render formats: :json
   end
 

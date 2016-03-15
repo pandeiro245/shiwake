@@ -20,12 +20,12 @@
     parent = React.findDOMNode(@refs.parent)
     return unless parent
     $(parent).select2()
+    selected = if @props.options.length then @props.options[0] else 12333
+    #selected = if @props.options.length then @props.options[0] else 11335
+    $(parent).select2('val', selected)
 
   shouldComponentUpdate: (nextProps, nextState) ->
-    if !@state.loading && !nextState.loading && @state.editing && nextState.editing
-      false
-    else
-      true
+    !(!@state.loading && !nextState.loading && @state.editing && nextState.editing)
 
   handleTitleClick: (e) ->
     e.preventDefault()
@@ -48,7 +48,6 @@
     params =
       _method: 'PATCH'
       parent_id: parentId
-    console.log params
 
     @setState(loading: true)
 
@@ -61,7 +60,6 @@
         @setState(removed: true)
         @props.onSave()
       error: (jqXHR, textStatus, errorThrown) ->
-        console.error(jqXHR, textStatus, errorThrown)
         errors = jqXHR.responseJSON
         alert(errors.join('\n'))
       complete: =>
@@ -73,10 +71,13 @@
 
   render: ->
     titleNode = if @state.editing
-                  `<strong>{this.props.task.title}</strong>`
+                  `<strong>{this.props.task.id}: {this.props.task.title}</strong>`
                 else
-                  `<a href="#" onClick={this.handleTitleClick}>{this.props.task.title}</a>`
+                  `<a href="#" className="title" onClick={this.handleTitleClick}>{this.props.task.id}: {this.props.task.title}</a>`
+    checkboxNode = `<input type="checkbox" />`
+
     taskNode = `<td className="text-break">
+                 {checkboxNode}
                  {titleNode}
                  &nbsp;
                  <a href={this.props.task.html_url} target="_blank">
@@ -87,8 +88,8 @@
                </td>`
 
     parentsNode = @props.parents.map (parent) =>
-      if parent.id != @props.task.id
-        `<option value={parent.id} key={parent.id}>{parent.label}</option>`
+      if (parent.id != @props.task.id) and !(@props.options.length > 1 and !(parent.id in @props.options))
+        `<option value={parent.id} key={parent.id}>{parent.id}: {parent.label}</option>`
 
     hidden = if @state.removed then 'hidden' else ''
 
@@ -123,9 +124,10 @@
         </td>
       </tr>`
     else
-      `<tr className={hidden}>
-        {taskNode}
-        <td></td>
-        <td></td>
+      `<tr className={hidden}>    
+       {taskNode}    
+       <td>{this.props.options.join(',')}</td>   
+       <td><i className="fa fa-fw fa-check"></i></td>   
       </tr>`
+
 

@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  mount RailsAdmin::Engine => '/admin', as: 'rails_admin'
   root 'welcome#index'
 
   controller :welcome do
@@ -12,6 +13,7 @@ Rails.application.routes.draw do
   get '/auth/failure', to: 'sessions#failure'
 
   resources :teams, only: [:edit] do
+    resources :filters, only: [:index]
     resources :tasks, only: [:index, :update]
   end
 

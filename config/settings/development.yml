@@ -1,14 +1,13 @@
-secret_key_base: ''
+secret_key_base: '***'
 
 timecrowd:
-  client_id: ''
-  client_secret: ''
+  client_id: '***'
+  client_secret: '***'
   site: 'https://timecrowd.net'
 trello:
-  client_id: ''
-  client_secret: ''
-  token: ''
-
+  client_id: '***'
+  client_secret: '***'
+  token: '***'
 deploy:
   to: '/var/www/shiwake'
   host: ''

@@ -26,11 +26,14 @@ class TimeCrowd
     access_token.get("/api/v1/teams/#{id}").parsed
   end
 
-  def team_tasks(team_id, state = nil)
-    access_token.get("/api/v1/teams/#{team_id}/tasks?state=#{state}").parsed
+  def team_tasks(team_id, state = nil, page=1)
+    access_token.get("/api/v1/teams/#{team_id}/tasks?state=#{state}&page=#{page}").parsed
   end
 
-  def update_team_task(team_id, id, body)
-    access_token.put("/api/v1/teams/#{team_id}/tasks/#{id}", body: body).parsed
+  def update_team_task(team_id, id, task)
+    access_token.put(
+      "/api/v1/teams/#{team_id}/tasks/#{id}", 
+      body: {task: task}
+    ).parsed
   end
 end

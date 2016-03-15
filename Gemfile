@@ -72,3 +72,5 @@ gem 'activerecord-session_store'
 source 'https://rails-assets.org' do
   gem 'rails-assets-select2'
 end
+
+gem 'rails_admin'
