@@ -4,25 +4,32 @@
     handleFilter: React.PropTypes.array.isRequired
 
   getInitialState: ->
-    loading: false
     notice: ''
+    filterLogics:[]
+
+  componentWillMount: ->
+    @listFilterLogics()
 
   handleChange: (e) ->
     tasks = @filterTasks(e.target.value)
     @props.handleFilter(tasks)
     
+  handleSelectFilter: (e) ->
+    keyword = e.target.text
+    keywordNode = React.findDOMNode(@refs.keyword)
+    keywordNode.value = keyword
+    
+    tasks = @filterTasks(keyword)
+    @props.handleFilter(tasks)
+    
   handleSaveClick: (e) ->
     e.preventDefault()
-    
     keywordNode = React.findDOMNode(@refs.keyword)
     keyword = $(keywordNode).val()
     return unless keyword
     
     params =
       keyword: keyword
-    console.log(params)
-
-    @setState(loading: true)
     @setState(notice: '')
     $.ajax
       method: 'POST'
@@ -31,12 +38,11 @@
       data: params
       success: =>
         @setState(notice: '検索条件を保存しました。')
-      error: (jqXHR, textStatus, errorThrown) ->
+        @listFilterLogics()
+      error: (jqXHR, textStatus, errorThrown) =>
         console.error(jqXHR, textStatus, errorThrown)
         errors = jqXHR.responseJSON
         alert(errors.join('\n'))
-      complete: =>
-        @setState(loading: false)
 
   handleNoticeClose: (e) ->
       @setState(notice: '')
@@ -49,6 +55,19 @@
       @props.tasks.filter (task) =>
         task.title.toLowerCase().indexOf(filterText) != -1 ||
         task.url.toLowerCase().indexOf(filterText) != -1
+  
+  listFilterLogics: ->
+    $.ajax
+      method: 'GET'
+      dataType: 'json'
+      url: "/filter_logics"
+      success:(jqXHR, textStatus) =>
+        console.log(jqXHR)
+        @setState(filterLogics: jqXHR)
+      error: (jqXHR, textStatus, errorThrown) =>
+        console.error(jqXHR, textStatus, errorThrown)
+        errors = jqXHR.responseJSON
+        alert(errors.join('\n'))
 
   render: ->
     notice =  if @state.notice
@@ -57,13 +76,16 @@
                   {this.state.notice}
                 </div>`
 
+    filterNodes = @state.filterLogics.map (filterLogic) =>
+      `<li><a href="#" onClick={_this.handleSelectFilter}>{filterLogic.keyword}</a></li>`
+
     `<div>
       <h3>
         Filter
       </h3>
       <form className="form-inline">
         {notice}
-        <div className="form-group">
+        <div className="input-group">
           <input
             className="form-control"
             type="text"
@@ -71,14 +93,17 @@
             placeholder="keyword"
             onChange={this.handleChange}
           />
-          <button className="btn btn-default" onClick={this.handleSaveClick}>
-            検索条件を保存
-          </button>
-        </div>
-        <div className="form-group">
-          <button className="btn btn-default">
-            保存した検索条件
-          </button>
+          <span className="input-group-btn">
+            <button className="btn btn-default" onClick={this.handleSaveClick}>
+              検索条件を保存
+            </button>
+            <button type="button" className="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              保存した検索条件 <span className="caret"></span>
+            </button>
+            <ul className="dropdown-menu">
+              {filterNodes}
+            </ul>
+          </span>
         </div>
       </form>
     </div>
