@@ -36,9 +36,14 @@
       dataType: 'json'
       url: "/filter_logics"
       data: params
-      success: =>
-        @setState(notice: '検索条件を保存しました。')
-        @listFilterLogics()
+      success: (jqXHR, textStatus) =>
+        console.log(jqXHR)
+        console.log(textStatus)
+        if jqXHR.errors
+          @setState(notice: jqXHR.errors)
+        else
+          @setState(notice: '検索条件を保存しました。')
+          @listFilterLogics()
       error: (jqXHR, textStatus, errorThrown) =>
         console.error(jqXHR, textStatus, errorThrown)
         errors = jqXHR.responseJSON
