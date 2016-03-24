@@ -8,7 +8,10 @@ class FilterLogicsController < ApplicationController
 
   def create
     @filterLogic = FilterLogic.new(user_id: current_user.uid, keyword: params[:keyword])
-    @filterLogic.save
-    render json: {}
+    if @filterLogic.save
+      render json: { }
+    else
+      render json: { errors: @filterLogic.errors.full_messages }
+    end
   end
 end

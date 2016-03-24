@@ -1,0 +1,10 @@
+ja:
+  activerecord:
+    models:
+      filter_logic: 検索条件
+    attributes:
+      filter_logic:
+        id: ID
+        created_at: 登録日時
+        updated_at: 更新日時
+        keyword: キーワード
