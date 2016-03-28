@@ -108,6 +108,12 @@
             <ul className="dropdown-menu">
               {filterNodes}
             </ul>
+            <button className="btn btn-default">
+              インポート
+            </button>
+            <a href="/filter_logics/download" className="btn btn-default">
+              エクスポート
+            </a>
           </span>
         </div>
       </form>
