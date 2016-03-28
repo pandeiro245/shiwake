@@ -6,6 +6,11 @@ class FilterLogicsController < ApplicationController
     render formats: :json
   end
 
+  def download
+    @filterLogics = FilterLogic.where(user_id: current_user.uid)
+    send_data render_to_string(formats: :json), filename: "filterLogic_#{Time.zone.now.strftime('%Y%m%d')}.json", type: :json
+  end
+
   def create
     @filterLogic = FilterLogic.new(user_id: current_user.uid, keyword: params[:keyword])
     if @filterLogic.save
